@@ -1,3 +1,5 @@
+## From Kosenko Sergey: to start analysis run R script: "tohtml.R"
+
 ## Introduction
 
 It is now possible to collect a large amount of data about personal
