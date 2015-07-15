@@ -91,13 +91,18 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
 	# 2.2.1 Finding a count of breaks for histogram
 	break1 <- round((max(steps_date$steps) - min(steps_date$steps))/1000, 0) + 2
 	# 2.2.2 Make a histogram
+	png("./figure/2.1 steps_date 2.2 histogram 2.3 mean_median-1.png")
 	hist(steps_date$steps, breaks = break1, main = "Distribution of total daily steps",
 	xlab = "Total daily steps", ylab = "Frequency")
+	dev.off()
 	
 #2.3 Calculate and report the mean and median total number of steps taken per day
 	mean_steps <- mean(steps_date$steps)		# [1] 10766.19
 	median_steps <- median(steps_date$steps)	# [1] 10765
 ```
+
+![histogram of the total number of steps taken each day](./figure/2.1 steps_date 2.2 histogram 2.3 mean_median-1.png)
+		
      Report:   
      Mean total number of steps taken per day: `r mean_steps`  
      Median total number of steps taken per day: `r median_steps` 
@@ -117,7 +122,7 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
      In line plot this gap is filled a straight line from (55 to 100). For time intervals that do not exist,
      because real time data goes only from 0 to 60 every hour.
      Therefore we must convert integer interval data into time interval data with next code:
-```{r 3.1 time series plot}
+```{r 3.1 time series plot, results='hide'}
 	# 3.1.1 Getting average numbers of steps by 5-minute intervals across all days	
 	steps_mean5 <- aggregate(steps ~ interval, data = all_data, FUN = "mean")
 	# 3.1.2 Setup "4 digits length" format for interval data
@@ -125,9 +130,13 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
 	# 3.1.3 Convert "4 digits data" to datetime data 
 	steps_mean5$interval <- strptime(steps_mean5$interval, format="%H%M")
 	# Make a plot:
+	png("./figure/3.1 time series plot-1.png")
 	plot(steps_mean5$interval, steps_mean5$steps, type = "l", col = "blue", 
 	main = "Average daily activity", xlab = "Time interval (5-minute)", ylab = "Average number of steps")
+	dev.off()
 ```
+![Time series plot](./figure/3.1 time series plot-1.png)
+
 ```{r 3.2 maximum steps, results='hide'}
      # 3.2 Which 5-minute interval, on average across all the days in the dataset, 
      # contains the maximum number of steps?
@@ -160,7 +169,7 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
      REPORT: `r na_count` is total number of rows with NAs.
 
 ```{r 4.2 strategy 4.3 fill_data}
-     # 4.2 Devise a strategy for filling in all of the missing values in the dataset. 
+    # 4.2 Devise a strategy for filling in all of the missing values in the dataset. 
 	# My strategy: 
 	# 1. Calculate a mean value for 5-minute intervals across all the days in the dataset
 	# 2. Fields with NA will be filled a mean data from corresponding 5-minute interval
@@ -176,16 +185,18 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
 	}	
 ```
 
-```{r 4.4 histogram 4.5 mean median} 
+```{r 4.4 histogram 4.5 mean median, results='hide'} 
      # 4.4 Make a histogram of the total number of steps taken each day and
 	# 4.4.1 Calculating the total number of steps taken per day:
      steps_date2 <- aggregate(steps ~ date, data = fill_data, FUN = "sum")
 	# 4.4.2 Finding a count of breaks for histogram
      break2 <- round((max(steps_date2$steps) - min(steps_date2$steps))/1000, 0) + 2
 	# 4.4.3 Make a histogram
-     hist(steps_date2$steps, breaks = break2, main = "Distribution of total daily steps", 
+     png("./figure/4.4 histogram 4.5 mean median-1.png")
+	 hist(steps_date2$steps, breaks = break2, main = "Distribution of total daily steps", 
      xlab = "Total daily steps", ylab = "Frequency")
-     # 4.5 Calculate and report the mean and median total number of steps taken per day.
+	 dev.off()
+	# 4.5 Calculate and report the mean and median total number of steps taken per day.
 	mean_steps2 <- mean(steps_date2$steps)		# [1] 10766.19
 	median_steps2 <- median(steps_date2$steps)	# [1] 10766.19
 	# create a table with mean and median data for convenient analysis:
@@ -193,7 +204,8 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
 	dimnames = list(c("Ignoring NA", "Imputing NA"), c("Mean", "Median")))
 	total
 ```
-    
+![Histogram of the total numberr of steps taken each day](./figure/4.4 histogram 4.5 mean median-1.png)
+	
 	 REPORT: Imputing NA to mean value in new dataset don't changed mean value in new dataset
 	 and practically don't affected on median value in new dataset.
     
@@ -208,7 +220,7 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
      See the README file in the GitHub repository to see an example of what
 	 this plot should look like using simulated data. 
      
-```{r 5.1 factor variables 5.2 panel plot}
+```{r 5.1 factor variables 5.2 panel plot, results='hide'}
 	# Decision:
      #5.1  Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating 
      # whether a given date is a weekday or weekend day.
@@ -216,13 +228,12 @@ all_data$date <- as.Date(all_data$date, format="%Y-%m-%d")
      # 5.2 Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis)
      # and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 	steps_date3 <- aggregate(steps ~ dayweek + interval, data = fill_data, FUN = "mean")
-	xyplot(steps ~ interval | dayweek, data = steps_date3, layout = c(1, 2), type = "l",
+	png("./figure/5.1 factor variables 5.2 panel plot-1.png")
+	panelplot <- xyplot(steps ~ interval | dayweek, data = steps_date3, layout = c(1, 2), type = "l",
 	xlab = "Interval", ylab = "Number of steps") ## Plot with 2 panels
+	print(panelplot)
+	dev.off()
 ```
-
+![Panel plot by weekdays/weekend](./figure/5.1 factor variables 5.2 panel plot-1.png)
+	
 	Assignment finished.
-
-```{r html, echo = FALSE, results='hide', error = FALSE}
-# open report in browser
-browseURL("PA1_template.html")
-```

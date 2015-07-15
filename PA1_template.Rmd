@@ -215,6 +215,8 @@ STEP 5: Are there differences in activity patterns between weekdays and weekends
      \
 ```{r 5.1 factor variables 5.2 panel plot}
 
+
+
 	# Decision:
      #5.1  Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating 
      # whether a given date is a weekday or weekend day.
